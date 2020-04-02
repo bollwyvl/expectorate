@@ -1,5 +1,4 @@
 import json
-import logging
 import re
 import subprocess
 from dataclasses import dataclass
@@ -13,15 +12,12 @@ import pyemojify
 
 from ..utils import ensure_js_package, ensure_repo
 from . import constants
+from .base import Base
 from .conventions import CONVENTIONS, SpecConvention
 
 
 @dataclass
-class SpecGenerator:
-    workdir: Path
-    output: Path
-    log: logging.Logger
-
+class SpecGenerator(Base):
     lsp_dir: Optional[Path] = None
     vlspn_dir: Optional[Path] = None
 

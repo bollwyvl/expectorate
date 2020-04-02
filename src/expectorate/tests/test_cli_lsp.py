@@ -49,7 +49,7 @@ def test_lsp_cli_default(runner_with_args_and_paths):
     """ happy day, using pre-validated commits from `constants.py`
     """
     runner, args, workdir, output = runner_with_args_and_paths
-    result = runner.invoke(cli, [*args, "lsp"], catch_exceptions=False)
+    result = runner.invoke(cli, [*args, "lsp", "generate"], catch_exceptions=False)
     assert result.exit_code == 0, result.__dict__
     assert_generated(workdir, output)
 
@@ -66,7 +66,7 @@ def test_lsp_cli_args(label, extra_args, runner_with_args_and_paths):
     """ try parsing a number of combinations of relevant combinations
     """
     runner, args, workdir, output = runner_with_args_and_paths
-    final_args = [*args, "lsp", *extra_args]
+    final_args = [*args, "lsp", "generate", *extra_args]
     result = runner.invoke(cli, final_args, catch_exceptions=False)
     assert result.exit_code == 0, result.__dict__
 

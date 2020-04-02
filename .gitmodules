@@ -1,0 +1,3 @@
+[submodule "vendor/hypothesis-jsonschema"]
+	path = vendor/hypothesis-jsonschema
+	url = https://github.com/bollwyvl/hypothesis-jsonschema

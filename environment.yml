@@ -8,7 +8,6 @@ dependencies:
   - click
   - git
   - hypothesis
-  - hypothesis-jsonschema
   - isort
   - jupyterlab ==2.0.1
   - mypy

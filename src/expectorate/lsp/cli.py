@@ -6,17 +6,24 @@ import click
 from ..context import Context
 from . import constants
 from .conventions import CONVENTIONS
-from .generate import SpecGenerator
 
 
-@click.command()
+@click.group()
+@click.pass_context
+def lsp(ctx: Context):
+    """ Tools for working with the Language Server Protocol
+    """
+    pass
+
+
+@lsp.command()
 @click.pass_context
 @click.option("--lsp-spec-version", default=constants.LSP_SPEC_VERSION)
 @click.option("--lsp-repo", default=constants.LSP_REPO)
 @click.option("--lsp-committish", default=constants.LSP_COMMIT)
 @click.option("--vlspn-repo", default=constants.VLSPN_REPO)
 @click.option("--vlspn-committish", default=constants.VLSPN_COMMIT)
-def lsp(
+def generate(
     ctx: Context,
     lsp_spec_version: Text,
     lsp_repo: Text,
@@ -24,10 +31,9 @@ def lsp(
     vlspn_repo: Text,
     vlspn_committish: Text,
 ):
-    """ generate a JSON schema from:
-        - Language Server Protocol (lsp) specification
-        - vscode-languageserver-node reference implementation
+    """ generate JSON schema from markdown and typescript
     """
+    from .generate import SpecGenerator
 
     lsp_spec = (
         CONVENTIONS.get(lsp_spec_version) or CONVENTIONS[constants.LSP_SPEC_VERSION]
@@ -49,3 +55,20 @@ def lsp(
         vlspn_committish=vlspn_committish,
     )
     sys.exit(gen.generate())
+
+
+@lsp.command()
+@click.pass_context
+def validate(ctx: Context):
+    """ test JSON schema by finding counterexamples
+    """
+    from .validate import SpecValidator
+
+    assert ctx.obj.workdir and ctx.obj.workdir.is_dir(), "Need a working directory"
+    assert ctx.obj.output and ctx.obj.output.is_dir(), "Need an output directory"
+    assert ctx.obj.log, "Need a log"
+
+    validator = SpecValidator(
+        log=ctx.obj.log, workdir=ctx.obj.workdir, output=ctx.obj.output,
+    )
+    sys.exit(validator.validate())
